@@ -22,9 +22,13 @@ public class StandardProductPricingManagerImplementation extends AbstractProduct
 
     public final static String inputFileName = "C:\\inputFiles\\input.txt";
     
+    private static final String CHAR_REPRESENTING_HIGH_MAGNITUDE = "H";
+    private static final String CHAR_REPRESENTING_LOW_MAGNITUDE = "L";
+
+    
     
     @Override
-    List<ProductInfo> loadProductInfo() throws PricingException {
+    public List<ProductInfo> loadProductInfo() throws PricingException {
         List<ProductInfo> piList= null;
         Map<String,ProductInfo> productsByCode = new HashMap<>();
          try (Scanner sc = new Scanner(new File(inputFileName))){
@@ -76,17 +80,17 @@ public class StandardProductPricingManagerImplementation extends AbstractProduct
     }
 
     
-    private Magnitude getNextParameter(Scanner sc) {
+    private Magnitude getNextParameter(Scanner sc) throws PricingException{
         Magnitude magnitude;
         String parameter = sc.next();
-        if ( parameter.equals("H") ) {
+        if ( parameter.equals(CHAR_REPRESENTING_HIGH_MAGNITUDE) ) {
             magnitude = Magnitude.HIGH;
         }
-        else if ( parameter.equals("L")) {
+        else if ( parameter.equals(CHAR_REPRESENTING_LOW_MAGNITUDE)) {
             magnitude = Magnitude.LOW;
         }
         else {
-            throw new RuntimeException();
+            throw new PricingException("Expected pricing parameter mot found");
         }
         return magnitude;
     }
@@ -96,11 +100,16 @@ public class StandardProductPricingManagerImplementation extends AbstractProduct
         for ( int i = 1; i <= numPrices; i++ ) {
             if ( sc.hasNextLine()) {
                 String productCode = sc.next();
-                pi = productsByCode.get(productCode);
-                if ( pi == null ) {
-                    throw new RuntimeException();
+                if ( productCode != null ) {
+                    pi = productsByCode.get(productCode);
+                    if ( pi == null ) {
+                        throw new PricingException("Product info and parameters mot found for " + productCode);
+                    }
+                    pi.addPrice(parsePriceLine(sc));
                 }
-                pi.addPrice(parsePriceLine(sc));
+                else {
+                    throw new PricingException("Expected price data mot found for " + productCode);
+                }
             }
             else {
                 throw new PricingException("Lines of price data found in the file does not match the count");

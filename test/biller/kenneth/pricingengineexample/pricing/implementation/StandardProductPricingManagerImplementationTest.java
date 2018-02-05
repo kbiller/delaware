@@ -106,7 +106,7 @@ public class StandardProductPricingManagerImplementationTest {
         productInfo.addPrice(new ProductPrice("V",new BigDecimal("20.00")));
         productInfo.addPrice(new ProductPrice("CB",new BigDecimal("30.00")));
         StandardProductPricingManagerImplementation instance = new StandardProductPricingManagerImplementation();
-        BigDecimal expResult = new BigDecimal("22.000");
+        BigDecimal expResult = new BigDecimal("22.0000");
         BigDecimal result = instance.computeProductPrice(productInfo);
         assertEquals(expResult, result);
     }

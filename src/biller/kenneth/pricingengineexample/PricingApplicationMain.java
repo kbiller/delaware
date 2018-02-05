@@ -17,7 +17,8 @@ public class PricingApplicationMain {
             new StandardProductPricingManagerImplementation().executePricing();
         }
         catch (PricingException e) {
-            
+            System.out.printf("%s","Pricing engine error: " + e.toString() + "\n");
+           
         }
     }
     

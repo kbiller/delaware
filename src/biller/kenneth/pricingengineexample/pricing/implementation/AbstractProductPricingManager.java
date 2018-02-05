@@ -9,15 +9,19 @@ import java.util.List;
 /**
  *
  * @author Kenneth Biller
- */
+ */ 
 public abstract class AbstractProductPricingManager implements ProductPricingManager {
 
     @Override
     public final void executePricing() throws PricingException {
         List<ProductInfo> products = this.loadProductInfo();
-        for (ProductInfo productInfo:products ) {
-            BigDecimal ourPrice = computeProductPrice(productInfo);
-            outputProductPrice(productInfo.getProductCode(),ourPrice);
+        if ( (products == null) || (products.size() == 0 ) ) {
+            throw new PricingException("No products to price");
+        } else {
+            for (ProductInfo productInfo:products ) {
+                BigDecimal ourPrice = computeProductPrice(productInfo);
+                outputProductPrice(productInfo.getProductCode(),ourPrice);
+            }
         }
     }
     

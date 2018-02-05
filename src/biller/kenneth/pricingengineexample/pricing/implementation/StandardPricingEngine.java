@@ -13,6 +13,10 @@ import java.math.BigDecimal;
  */
 public class StandardPricingEngine implements PricingEngine{
     
+    private static final String HIGH_SUPPLY_LOW_DEMAND_MULTIPLIER = "0.95";
+    private static final String LOW_SUPPLY_HIGH_DEMAND_MULTIPLIER = "1.05";
+    private static final String LOW_SUPPLY_LOW_DEMAND_MULTIPLIER = "1.10";
+
     private static PricingEngine engine = new StandardPricingEngine();
 
     public static PricingEngine getInstance() {
@@ -40,16 +44,16 @@ public class StandardPricingEngine implements PricingEngine{
         BigDecimal adjustedPrice = startingPrice;
         if ( productInfo.getSupply() == Magnitude.HIGH ) {
             if ( productInfo.getDemand() == Magnitude.LOW ) {
-                adjustedPrice = adjustedPrice.multiply(new BigDecimal("0.95"));
+                adjustedPrice = adjustedPrice.multiply(new BigDecimal(HIGH_SUPPLY_LOW_DEMAND_MULTIPLIER));
             }
             //Note:  the rule is that if supplu is high and demand is high, do nothing to starting price
         }
         else {
             if ( productInfo.getDemand() == Magnitude.HIGH ) {
-                adjustedPrice = adjustedPrice.multiply(new BigDecimal("1.05"));
+                adjustedPrice = adjustedPrice.multiply(new BigDecimal(LOW_SUPPLY_HIGH_DEMAND_MULTIPLIER));
             }
             else {
-                adjustedPrice = adjustedPrice.multiply(new BigDecimal("1.1"));
+                adjustedPrice = adjustedPrice.multiply(new BigDecimal(LOW_SUPPLY_LOW_DEMAND_MULTIPLIER));
             }            
         }
         return adjustedPrice;
